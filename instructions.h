@@ -1,1 +1,0 @@
-const char* CODE = "INC ecx; INC ecx; INC ecx; DEC edx; DEC edx;";
