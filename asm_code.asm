@@ -1,0 +1,1 @@
+INC ecx; INC ecx; INC ecx; DEC edx; DEC edx;

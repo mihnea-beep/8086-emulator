@@ -1,0 +1,1 @@
+const char* X86_CODE32 = "\x41\x41\x41\x4a\x4a";
