@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include "assembler.h"
 using namespace std;
 
 int main(){
@@ -25,3 +24,4 @@ int main(){
     
 return 0;
 }
+
