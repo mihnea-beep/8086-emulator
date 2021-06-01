@@ -31,6 +31,7 @@ void CPU::map()
 
 bool CPU::write()
 {
+    rx_EIP();
     // write machine code to be emulated to memory
     if (uc_mem_write(uc, ADDRESS, X86_CODE32, size))
     {
@@ -38,6 +39,7 @@ bool CPU::write()
         return 0;
     }
     cout << "Machine code written to memory\n";
+    rx_EIP();
     return 1;
 }
 
@@ -59,9 +61,15 @@ void CPU::wx_regs()
     cout << "Registers initialized.\n";
 }
 
+void CPU::rx_EIP()
+{
+    uc_reg_read(uc, UC_X86_REG_EIP, &r_eip);
+    printf(">>> EIP = %d\n", r_eip);
+}
+
 void CPU::rx_regs()
 {
-    
+
     uc_reg_read(uc, UC_X86_REG_ECX, &r_ecx);
     uc_reg_read(uc, UC_X86_REG_EDX, &r_edx);
     uc_reg_read(uc, UC_X86_REG_EBX, &r_ebx);
@@ -77,18 +85,47 @@ void CPU::rx_regs()
 
 void CPU::emulate()
 {
-    err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 0);
-    if (err)
+    cout << "ADR: " << ADDRESS << endl;
+    cout << "EIP: " << r_eip << endl;
+    rx_EIP();
+    // err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 1);
+    // if (err)
+    // {
+    //     printf("Failed on uc_emu_start() with error returned %u: %s\n",
+    //            err, uc_strerror(err));
+    // }
+    // rx_EIP();
+    // cout << "ADR: " << ADDRESS << endl;
+
+    // err = uc_emu_start(uc, ADDRESS + 1, ADDRESS + size, 0, 1);
+    // if (err)
+    // {
+    //     printf("Failed on uc_emu_start() with error returned %u: %s\n",
+    //            err, uc_strerror(err));
+    // }
+    // rx_EIP();
+    err = UC_ERR_OK;
+    err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 1);
+    rx_EIP();
+    rx_regs();
+    int oldIP = 0;
+    while (r_eip != ADDRESS + size)
     {
-        printf("Failed on uc_emu_start() with error returned %u: %s\n",
-               err, uc_strerror(err));
+        oldIP = r_eip;
+        string x;
+        // cout << "Press any key to advance ...";
+        // cin >> x;
+        cout << " ----- " << endl;
+        err = uc_emu_start(uc, ADDRESS + (r_eip - ADDRESS), ADDRESS + size, 0, 1);
+        rx_EIP();
+        rx_regs();
     }
 }
 
 void CPU::close()
 {
-  printf("Emulation done. Below is the CPU context\n");
-  rx_regs();
-  uc_close(uc);
-  printf("CPU: OFF\n");
+    printf("Emulation done. Below is the CPU context\n");
+    rx_regs();
+    uc_close(uc);
+    printf("CPU: OFF\n");
 }
