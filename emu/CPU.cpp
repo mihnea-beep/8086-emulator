@@ -1,6 +1,9 @@
 #include "CPU.h"
 #include <fstream>
 #include "machine_code.h"
+#include <vector>
+#include "Assembler.h"
+using namespace std;
 
 CPU::CPU(/* args */)
 {
@@ -11,7 +14,7 @@ CPU::~CPU()
 }
 
 bool CPU::open()
-{
+{   
     err = uc_open(UC_ARCH_X86, UC_MODE_32, &uc);
 
     if (err != UC_ERR_OK)
@@ -32,8 +35,50 @@ void CPU::map()
 bool CPU::write()
 {
     rx_EIP();
+
+    // 
+
+    ifstream src_file("emu_data/machine_code.txt");
+    string line;
+    getline(src_file, line);
+    cout << "Code: " << line << endl;
+    cout << "Code2: " << line.c_str() << endl;
+    // printf("C1: %s\n", line);
+    printf("C2: %s\n", line.c_str());
+
+    const char* machine_code; //X86_CODE32; //line.c_str();
+    // string a = "INC ecx;";
+    // string b = " INC ecx;";
+    // string c = a + b;
+    const char* x = line.c_str();
+    // cout << "x content: " << x;
+    // printf("Continut x: %s\n", x);
+
+    // ---- test binary write
+    ifstream infile;
+    infile.open("emu_data/junk.dat");
+    // getline(infile, line);
+    // for(int i = 0; i < size; i++){
+    //     infile >> c[i];
+    
+    char in[size + 1];
+
+for(int i = 0; i < size + 1; i++){
+    infile >> in[i];
+
+    cout << "\n\nREAD: " << (int)in[i] << "\n\n";
+    cout << "SIZE: " << size;
+}
+    // for(int i = 0; i < 1; i++){
+    //     infile >> in[i];
+    //     char brk[1];
+    //     infile >> brk[0];
+    //     cout << in[i] << "-";
+    // }
+
+
     // write machine code to be emulated to memory
-    if (uc_mem_write(uc, ADDRESS, X86_CODE32, size))
+    if (uc_mem_write(uc, ADDRESS, in, size))
     {
         printf("Failed to write emulation code to memory, quit!\n");
         return 0;
@@ -45,7 +90,7 @@ bool CPU::write()
 
 void CPU::set_data()
 {
-    ifstream metadata_file("metadata.txt");
+    ifstream metadata_file("emu_data/metadata.txt");
     string size_data;
     getline(metadata_file, size_data);
     size = stoi(size_data);
@@ -110,7 +155,7 @@ void CPU::emulate()
     rx_regs();
     int oldIP = 0;
     while (r_eip != ADDRESS + size)
-    {
+   {
         oldIP = r_eip;
         string x;
         // cout << "Press any key to advance ...";
@@ -127,5 +172,20 @@ void CPU::close()
     printf("Emulation done. Below is the CPU context\n");
     rx_regs();
     uc_close(uc);
+    reset_regs();
     printf("CPU: OFF\n");
+}
+
+void CPU::reset_regs()
+{
+    printf("Resetting registers\n");
+    r_ebx = 1;
+    r_ecx = 1;
+    r_edx = 1;
+    r_eax = 0;
+    r_eip = 0;
+}
+
+int CPU::get_eax(){
+    return r_eax;
 }
