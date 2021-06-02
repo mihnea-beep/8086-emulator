@@ -3,11 +3,17 @@
 #include "CPU.h"
 using namespace std;
 
-int main(int argc, char const *argv[])
-{
+int main(){
 
+	
+    // Test assembler functionality
+    Assembler assembler;
+    assembler.open();
+    assembler.load(); // "asm_code.asm" - default input file
+    assembler.store("machine_code.txt"); 
+    
+    
     CPU cpu;
-
     cpu.set_data();
     cpu.open();
     cpu.map();
@@ -18,5 +24,7 @@ int main(int argc, char const *argv[])
     
     cpu.emulate();
     cpu.close();
-    return 0;
+
+    
+return 0;
 }
