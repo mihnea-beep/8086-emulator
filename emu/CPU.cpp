@@ -3,6 +3,7 @@
 #include "machine_code.h"
 #include <vector>
 #include "Assembler.h"
+#include <vector>
 using namespace std;
 
 CPU::CPU(/* args */)
@@ -11,10 +12,27 @@ CPU::CPU(/* args */)
 
 CPU::~CPU()
 {
+    // vector<int>reg;
+    // regHistory.push_back(reg);
+    eax.push_back(r_eax);
+    ebx.push_back(r_ebx);
+    ecx.push_back(r_ecx);
+    edx.push_back(r_edx);
 }
 
 bool CPU::open()
-{   
+{
+    // TODO: clear logic
+    eax.clear();
+    ebx.clear();
+    ecx.clear();
+    edx.clear();
+    eax.push_back(r_eax);
+    ebx.push_back(r_ebx);
+    ecx.push_back(r_ecx);
+    edx.push_back(r_edx);
+    // update regHist
+
     err = uc_open(UC_ARCH_X86, UC_MODE_32, &uc);
 
     if (err != UC_ERR_OK)
@@ -36,7 +54,7 @@ bool CPU::write()
 {
     rx_EIP();
 
-    // 
+    //
 
     ifstream src_file("emu_data/machine_code.txt");
     string line;
@@ -46,11 +64,11 @@ bool CPU::write()
     // printf("C1: %s\n", line);
     printf("C2: %s\n", line.c_str());
 
-    const char* machine_code; //X86_CODE32; //line.c_str();
+    const char *machine_code; //X86_CODE32; //line.c_str();
     // string a = "INC ecx;";
     // string b = " INC ecx;";
     // string c = a + b;
-    const char* x = line.c_str();
+    const char *x = line.c_str();
     // cout << "x content: " << x;
     // printf("Continut x: %s\n", x);
 
@@ -60,22 +78,22 @@ bool CPU::write()
     // getline(infile, line);
     // for(int i = 0; i < size; i++){
     //     infile >> c[i];
-    
+
     char in[size + 1];
 
-for(int i = 0; i < size + 1; i++){
-    infile >> in[i];
+    for (int i = 0; i < size + 1; i++)
+    {
+        infile >> in[i];
 
-    cout << "\n\nREAD: " << (int)in[i] << "\n\n";
-    cout << "SIZE: " << size;
-}
+        cout << "\n\nREAD: " << (int)in[i] << "\n\n";
+        cout << "SIZE: " << size;
+    }
     // for(int i = 0; i < 1; i++){
     //     infile >> in[i];
     //     char brk[1];
     //     infile >> brk[0];
     //     cout << in[i] << "-";
     // }
-
 
     // write machine code to be emulated to memory
     if (uc_mem_write(uc, ADDRESS, in, size))
@@ -122,6 +140,9 @@ void CPU::rx_regs()
 
     cout << "Values read from register:\n";
 
+    ofstream historyFile("emu_data/hist.txt");
+    historyFile.close();
+
     printf(">>> ECX = %d\n", r_ecx);
     printf(">>> EDX = %d\n", r_edx);
     printf(">>> EBX = %d\n", r_ebx);
@@ -153,17 +174,27 @@ void CPU::emulate()
     err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 1);
     rx_EIP();
     rx_regs();
+    eax.push_back(r_eax);
+    ebx.push_back(r_ebx);
+    ecx.push_back(r_ecx);
+    edx.push_back(r_edx);
     int oldIP = 0;
     while (r_eip != ADDRESS + size)
-   {
+    {
         oldIP = r_eip;
         string x;
         // cout << "Press any key to advance ...";
         // cin >> x;
         cout << " ----- " << endl;
         err = uc_emu_start(uc, ADDRESS + (r_eip - ADDRESS), ADDRESS + size, 0, 1);
+
         rx_EIP();
         rx_regs();
+
+        eax.push_back(r_eax);
+        ebx.push_back(r_ebx);
+        ecx.push_back(r_ecx);
+        edx.push_back(r_edx);
     }
 }
 
@@ -174,6 +205,11 @@ void CPU::close()
     uc_close(uc);
     reset_regs();
     printf("CPU: OFF\n");
+    for (int i = 0; i < eax.size(); i++)
+    {
+        cout << "step[" << i << "] "
+             << ">>> eax: " << eax.at(i) << endl;
+    }
 }
 
 void CPU::reset_regs()
@@ -186,6 +222,7 @@ void CPU::reset_regs()
     r_eip = 0;
 }
 
-int CPU::get_eax(){
-    return r_eax;
+vector<int> CPU::get_eax()
+{
+    return eax;
 }
