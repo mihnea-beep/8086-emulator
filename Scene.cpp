@@ -144,7 +144,8 @@ void Scene::startCPU()
 void Scene::editFile()
 {
   // TODO: parameter
-  system("gedit/emu_data/asm_code.asm");
+  system("gedit emu_data/asm_code.asm");
+  // system("ls");
 }
 
 void Scene::update()

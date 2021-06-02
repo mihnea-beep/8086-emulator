@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <unicorn/unicorn.h>
+#include <vector>
 using namespace std;
 
 class CPU
@@ -18,6 +19,13 @@ private:
     int r_edx = 1; // EDX 
     int r_eax = 0; // EAX
     int r_eip = 0;
+
+    vector<vector<int>> regHistory; // a, b, c, d
+    vector<int> eax;
+    vector<int> ebx;
+    vector<int> ecx;
+    vector<int> edx;
+
     
 public:
     CPU();
@@ -35,7 +43,7 @@ public:
     void reset_regs();
 
 
-    int get_eax();
+    vector<int> get_eax();
     int get_ebx();
     int get_ecx();
     int get_edx();
