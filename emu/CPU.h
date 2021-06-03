@@ -9,6 +9,7 @@ class CPU
 private:
     const int ADDRESS = 0x1000000;
     int size;
+    int instructionsCnt = 0;
     uc_engine *uc;
     uc_err err;
     // char* X86_CODE32; // = "\x41\x41\x41\x4a\x4a\xb8\x2c\x01\x00\x00\x01\xc1";
@@ -48,6 +49,6 @@ public:
     int get_ecx();
     int get_edx();
     int get_eip();
-    
+    int get_instructionsCnt();
     ~CPU();
 };
