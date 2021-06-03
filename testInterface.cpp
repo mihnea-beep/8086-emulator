@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
     SDL_CreateWindowAndRenderer(500, 380, SDL_WINDOW_RESIZABLE, &window, &renderer);
     SDL_SetWindowTitle(window, "Menu");
 
-    SDL_SetWindowSize(window, 700, 480);
+    SDL_SetWindowSize(window, 1280, 720);
     Scene a;
     a.Init(renderer);
     a.setRunning(true);
