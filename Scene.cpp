@@ -7,6 +7,7 @@
 #include <thread>
 #include "emu/Assembler.h"
 #include "emu/CPU.h"
+#include <bitset>
 
 Scene::Scene()
 {
@@ -42,6 +43,26 @@ void Scene::loadRes(SDL_Renderer *Renderer)
   regs[0].setY(50);
   regs[0].setColor(0, 0, 0);
   regs[0].setButton("AX: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[1].setX(500);
+  regs[1].setY(100);
+  regs[1].setColor(0, 0, 0);
+  regs[1].setButton("BX: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[2].setX(500);
+  regs[2].setY(150);
+  regs[2].setColor(0, 0, 0);
+  regs[2].setButton("CX: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[3].setX(500);
+  regs[3].setY(200);
+  regs[3].setColor(0, 0, 0);
+  regs[3].setButton("DX: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[4].setX(500);
+  regs[4].setY(250);
+  regs[4].setColor(0, 0, 0);
+  regs[4].setButton("IP: ", "IBM_PS.ttf", 20, Renderer);
 }
 
 void Scene::Init(SDL_Renderer *Renderer)
@@ -133,6 +154,12 @@ void Scene::checkInput()
           stepIndex--;
         stepPressed = false;
       }
+      if (formatPressed)
+      {
+        cout << "Changed format" << endl;
+        decimalFormat = !decimalFormat;
+        formatPressed = false;
+      }
     }
   }
 }
@@ -193,8 +220,7 @@ void Scene::update()
   msg[4].setColor(0, 0, 0);
   msg[5].setColor(0, 0, 0);
   msg[6].setColor(0, 0, 0);
-
-
+  msg[7].setColor(0, 0, 0);
 
   assemblePressed = false;
   exitPressed = false;
@@ -202,6 +228,7 @@ void Scene::update()
   executePressed = false;
   stepPressed = false;
   prevPressed = false;
+  formatPressed = false;
 
   if ((mx >= msg[0].getX()) && (mx <= (msg[0].getX() + msg[0].getW())))
     if ((my >= msg[0].getY()) && (my <= (msg[0].getY() + msg[0].getH())))
@@ -242,13 +269,14 @@ void Scene::update()
       msg[5].setColor(255, 0, 0);
       prevPressed = true;
     }
+
+  if ((mx >= msg[7].getX()) && (mx <= (msg[7].getX() + msg[7].getW())))
+    if ((my >= msg[7].getY()) && (my <= (msg[7].getY() + msg[7].getH())))
+    {
+      msg[7].setColor(255, 0, 0);
+      formatPressed = true;
+    }
   // CPU
-
-  // step by step execution
-
-  if (stepPressed)
-  {
-  }
 }
 
 void Scene::render(SDL_Renderer *Renderer)
@@ -277,13 +305,78 @@ void Scene::render(SDL_Renderer *Renderer)
   msg[5].display(352, 310, 150, 50, Renderer, "blended");
 
   // registers values
-  regs[0].setButton("AX: " + to_string(cpu.get_eax().at(stepIndex)), "IBM_PS.ttf", 35, Renderer);
+
+  stringstream axStream;
+  stringstream bxStream;
+  stringstream cxStream;
+  stringstream dxStream;
+  stringstream ipStream;
+
+
+  if (decimalFormat)
+  {
+    axStream.str("");
+    axStream << cpu.get_eax().at(stepIndex);
+
+    bxStream.str("");
+    bxStream << cpu.get_ebx().at(stepIndex);
+
+    cxStream.str("");
+    cxStream << cpu.get_ecx().at(stepIndex);
+
+    dxStream.str("");
+    dxStream << cpu.get_edx().at(stepIndex);
+
+    ipStream.str("");
+    ipStream << cpu.get_eip().at(stepIndex);
+
+    cout << "decimal";
+  }
+  else // hex
+  {
+    axStream.str("");
+    axStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_eax().at(stepIndex);
+
+    bxStream.str("");
+    bxStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_ebx().at(stepIndex);
+
+    cxStream.str("");
+    cxStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_ecx().at(stepIndex);
+
+    dxStream.str("");
+    dxStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_edx().at(stepIndex);
+
+    ipStream.str("");
+    ipStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_eip().at(stepIndex);
+
+    cout << "hex";
+  }
+
+  // bxStream << bitset<8>(cpu.get_ebx().at(stepIndex));
+
+  regs[0].setButton("AX: " + axStream.str(), "IBM_PS.ttf", 35, Renderer);
   regs[0].display(regs[0].getX(), regs[0].getY(), 150, 50, Renderer, "blended");
+
+  regs[1].setButton("BX: " + bxStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[1].display(regs[1].getX(), regs[1].getY(), 150, 50, Renderer, "blended");
+
+  regs[2].setButton("CX: " + cxStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[2].display(regs[2].getX(), regs[2].getY(), 150, 50, Renderer, "blended");
+
+  regs[3].setButton("DX: " + dxStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[3].display(regs[3].getX(), regs[3].getY(), 150, 50, Renderer, "blended");
+
+  regs[4].setButton("IP: " + ipStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[4].display(regs[4].getX(), regs[4].getY(), 150, 50, Renderer, "blended");
 
   // step index
   msg[6].setButton("Step index: " + to_string(stepIndex), "IBM_PS.ttf", 25, Renderer, "blended");
   msg[6].display(322, 410, 150, 30, Renderer, "blended");
 
+  // change format
+
+  msg[7].setButton("Format", "IBM_PS.ttf", 25, Renderer, "blended");
+  msg[7].display(322, 510, 150, 30, Renderer, "blended");
 
   SDL_RenderPresent(Renderer);
 }

@@ -14,18 +14,21 @@ class Scene
   bool scene_running = false;
 
   GUI element;
-  Button msg[7]; // 5 buttons
+  Button msg[10]; // 5 buttons
   bool assemblePressed = false;
   bool exitPressed = false;
   bool editPressed = false;
   bool executePressed = false;
   bool stepPressed = false; // next
   bool prevPressed = false; 
+  bool formatPressed = false;
+  bool decimalFormat = false;
   Assembler assembler;
   CPU cpu;
+  int i = 0;
 
   int stepIndex = 0;
-  Button regs[5];
+  Button regs[10];
 
 
 public:
