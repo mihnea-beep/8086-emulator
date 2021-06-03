@@ -103,16 +103,24 @@ void Scene::checkInput()
       }
       if (executePressed)
       {
+        stepIndex = 0;
         cout << "Launching CPU ...";
         startCPU();
         // thread threadLaunch = thread(launchCPU);
         // threadLaunch.detach();
       }
-            if (stepPressed)
+      if (stepPressed)
       {
-        cout << "Next\n" << "stepIndex: " << stepIndex;
-        if(stepIndex < cpu.get_instructionsCnt())
+        cout << "Next" << endl;
+        cout << "stepIndex: " << stepIndex << endl;
+
+        if (stepIndex < cpu.get_instructionsCnt() - 1)
           stepIndex++;
+        stepPressed = false;
+        // if (stepIndex < cpu.get_instructionsCnt())
+        //   stepIndex++;
+        // else
+        //   stepIndex = 0;
         // stepPressed = false;
         // thread threadLaunch = thread(launchCPU);
         // threadLaunch.detach();
@@ -215,6 +223,12 @@ void Scene::update()
       stepPressed = true;
     }
   // CPU
+
+  // step by step execution
+
+  if (stepPressed)
+  {
+  }
 }
 
 void Scene::render(SDL_Renderer *Renderer)
