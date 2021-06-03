@@ -15,6 +15,7 @@ Scene::Scene()
 void Scene::loadRes(SDL_Renderer *Renderer)
 {
 
+  // menu buttons
   msg[0].setX(260);
   msg[0].setY(50);
 
@@ -35,6 +36,12 @@ void Scene::loadRes(SDL_Renderer *Renderer)
   msg[3].setY(250);
   msg[3].setColor(0, 0, 0);
   msg[3].setButton("Execute", "IBM_PS.ttf", 20, Renderer);
+
+  // register values
+  regs[0].setX(500);
+  regs[0].setY(50);
+  regs[0].setColor(0, 0, 0);
+  regs[0].setButton("AX: ", "IBM_PS.ttf", 20, Renderer);
 }
 
 void Scene::Init(SDL_Renderer *Renderer)
@@ -101,6 +108,15 @@ void Scene::checkInput()
         // thread threadLaunch = thread(launchCPU);
         // threadLaunch.detach();
       }
+            if (stepPressed)
+      {
+        cout << "Next\n" << "stepIndex: " << stepIndex;
+        if(stepIndex < cpu.get_instructionsCnt())
+          stepIndex++;
+        // stepPressed = false;
+        // thread threadLaunch = thread(launchCPU);
+        // threadLaunch.detach();
+      }
     }
   }
 }
@@ -138,6 +154,8 @@ void Scene::startCPU()
   cpu.rx_regs();
 
   cpu.emulate();
+  assembler.close();
+
   cpu.close();
 }
 
@@ -156,11 +174,13 @@ void Scene::update()
   msg[1].setColor(0, 0, 0);
   msg[2].setColor(0, 0, 0);
   msg[3].setColor(0, 0, 0);
+  msg[4].setColor(0, 0, 0);
 
   assemblePressed = false;
   exitPressed = false;
   editPressed = false;
   executePressed = false;
+  stepPressed = false;
 
   if ((mx >= msg[0].getX()) && (mx <= (msg[0].getX() + msg[0].getW())))
     if ((my >= msg[0].getY()) && (my <= (msg[0].getY() + msg[0].getH())))
@@ -187,6 +207,13 @@ void Scene::update()
       msg[3].setColor(255, 0, 0);
       executePressed = true;
     }
+
+  if ((mx >= msg[4].getX()) && (mx <= (msg[4].getX() + msg[4].getW())))
+    if ((my >= msg[4].getY()) && (my <= (msg[4].getY() + msg[4].getH())))
+    {
+      msg[4].setColor(255, 0, 0);
+      stepPressed = true;
+    }
   // CPU
 }
 
@@ -206,6 +233,16 @@ void Scene::render(SDL_Renderer *Renderer)
 
   msg[3].setButton("  Execute  ", "IBM_PS.ttf", 35, Renderer, "blended");
   msg[3].display(152, 210, 150, 50, Renderer, "blended");
+
+  // step button
+
+  msg[4].setButton("Next", "IBM_PS.ttf", 35, Renderer, "blended");
+  msg[4].display(352, 210, 150, 50, Renderer, "blended");
+
+  // registers values
+  regs[0].setButton("AX: " + to_string(cpu.get_eax().at(stepIndex)), "IBM_PS.ttf", 35, Renderer);
+  regs[0].display(regs[0].getX(), regs[0].getY(), 150, 50, Renderer, "blended");
+
   SDL_RenderPresent(Renderer);
 }
 

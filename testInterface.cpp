@@ -12,10 +12,10 @@ int main(int argc, char const *argv[])
     TTF_Init();
     SDL_Renderer *renderer;
     SDL_Window *window;
-    SDL_CreateWindowAndRenderer(500, 380, SDL_WINDOW_SHOWN, &window, &renderer);
+    SDL_CreateWindowAndRenderer(500, 380, SDL_WINDOW_RESIZABLE, &window, &renderer);
     SDL_SetWindowTitle(window, "Menu");
 
-
+    SDL_SetWindowSize(window, 700, 480);
     Scene a;
     a.Init(renderer);
     a.setRunning(true);
