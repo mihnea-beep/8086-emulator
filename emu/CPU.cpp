@@ -18,7 +18,7 @@ CPU::CPU(/* args */)
     edx.push_back(r_edx);
     eip.push_back(r_eip);
     stringstream s;
-    s << bitset<11>(r_flags) << endl;
+    s << bitset<12>(r_flags) << endl;
     eflags.push_back(s.str());
 }
 
@@ -42,7 +42,7 @@ bool CPU::open()
     eip.push_back(r_eip);
 
     stringstream s;
-    s << bitset<11>(r_flags);
+    s << bitset<12>(r_flags);
     eflags.push_back(s.str());
     // update regHist
 
@@ -203,7 +203,7 @@ void CPU::emulate()
     edx.push_back(r_edx);
     eip.push_back(r_eip);
     stringstream s;
-    s << bitset<11>(r_flags);
+    s << bitset<12>(r_flags);
     eflags.push_back(s.str());
     s.str("");
     int oldIP = 0;
@@ -244,7 +244,7 @@ void CPU::emulate()
         ecx.push_back(r_ecx);
         edx.push_back(r_edx);
         eip.push_back(r_eip);
-        s << bitset<11>(r_flags);
+        s << bitset<12>(r_flags);
         eflags.push_back(s.str());
         s.str("");
         instructionsCnt++;
