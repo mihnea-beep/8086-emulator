@@ -58,6 +58,16 @@ string Assembler::getCode()
 
 void Assembler::close()
 {
+    // if (CODE != NULL)
+    //     delete CODE;
+    // CODE = NULL;
+    machine_code_stream.str(""); //clear();
+    cout << "cleared: " << machine_code_stream.str();
+    machine_code_string = "";
+
+    // if (encode != NULL)
+    //     delete encode;
+    // encode = NULL;
     // close Keystone instance when done
     ks_close(ks);
 }
