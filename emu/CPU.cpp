@@ -38,7 +38,7 @@ bool CPU::open()
     eip.push_back(r_eip);
     // update regHist
 
-    err = uc_open(UC_ARCH_X86, UC_MODE_32, &uc);
+    err = uc_open(UC_ARCH_X86, UC_MODE_16, &uc);
 
     if (err != UC_ERR_OK)
     {
@@ -52,7 +52,7 @@ bool CPU::open()
 void CPU::map()
 {
     // map 2MB memory for this emulation
-    uc_mem_map(uc, ADDRESS, 2 * 1024 * 1024, UC_PROT_ALL);
+    uc_mem_map(uc, ADDRESS, 1 * 1024 * 1024, UC_PROT_ALL);
 }
 
 bool CPU::write()
@@ -127,27 +127,27 @@ void CPU::set_data()
 
 void CPU::wx_regs()
 {
-    uc_reg_write(uc, UC_X86_REG_ECX, &r_ecx);
-    uc_reg_write(uc, UC_X86_REG_EDX, &r_edx);
-    uc_reg_write(uc, UC_X86_REG_EBX, &r_ebx);
-    uc_reg_write(uc, UC_X86_REG_EAX, &r_eax);
+    uc_reg_write(uc, UC_X86_REG_CX, &r_ecx);
+    uc_reg_write(uc, UC_X86_REG_DX, &r_edx);
+    uc_reg_write(uc, UC_X86_REG_BX, &r_ebx);
+    uc_reg_write(uc, UC_X86_REG_AX, &r_eax);
 
     cout << "Registers initialized.\n";
 }
 
 void CPU::rx_EIP()
 {
-    uc_reg_read(uc, UC_X86_REG_EIP, &r_eip);
+    uc_reg_read(uc, UC_X86_REG_IP, &r_eip);
     printf(">>> EIP = %d\n", r_eip);
 }
 
 void CPU::rx_regs()
 {
 
-    uc_reg_read(uc, UC_X86_REG_ECX, &r_ecx);
-    uc_reg_read(uc, UC_X86_REG_EDX, &r_edx);
-    uc_reg_read(uc, UC_X86_REG_EBX, &r_ebx);
-    uc_reg_read(uc, UC_X86_REG_EAX, &r_eax);
+    uc_reg_read(uc, UC_X86_REG_CX, &r_ecx);
+    uc_reg_read(uc, UC_X86_REG_DX, &r_edx);
+    uc_reg_read(uc, UC_X86_REG_BX, &r_ebx);
+    uc_reg_read(uc, UC_X86_REG_AX, &r_eax);
     // uc_reg_read(uc, UC_X86_REG_CS, &r_cs);
 
     cout << "Values read from register:\n";

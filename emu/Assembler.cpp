@@ -75,7 +75,7 @@ void Assembler::close()
 int Assembler::open()
 {
     cout << "\nOPEN\n";
-    err_ks = ks_open(KS_ARCH_X86, KS_MODE_32, &ks);
+    err_ks = ks_open(KS_ARCH_X86, KS_MODE_16, &ks);
     if (err_ks != KS_ERR_OK)
     {
         printf("ERROR: failed on ks_open(), quit\n");

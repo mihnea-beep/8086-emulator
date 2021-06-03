@@ -7,7 +7,7 @@ using namespace std;
 class CPU
 {
 private:
-    const int ADDRESS = 0x1000000;
+    const int ADDRESS = 0; // 0x1000000;
     int size;
     int instructionsCnt = 0;
     uc_engine *uc;
