@@ -18,7 +18,7 @@ private:
     size_t stat_count;
     char* CODE; // "INC ecx; INC ecx; INC ecx; DEC edx; DEC edx; MOV eax, 300; ADD ecx, eax;";
     unsigned char *encode;
-
+    bool asmErr = false;
     stringstream machine_code_stream;
     string machine_code_string;
     //char* assembly_code;
@@ -38,6 +38,7 @@ public:
     ~Assembler();
     string getCode();
     void test();
+    bool getErr();
 
 };
 

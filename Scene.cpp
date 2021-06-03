@@ -200,6 +200,9 @@ void Scene::startCPU()
   assembler.close();
 
   cpu.close();
+
+  if(assembler.getErr())
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assembly error", "Assembly error\nCheck your code!", NULL);
 }
 
 void Scene::editFile()

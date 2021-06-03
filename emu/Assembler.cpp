@@ -74,6 +74,7 @@ void Assembler::close()
 
 int Assembler::open()
 {
+    asmErr = false;
     cout << "\nOPEN\n";
     err_ks = ks_open(KS_ARCH_X86, KS_MODE_16, &ks);
     if (err_ks != KS_ERR_OK)
@@ -93,6 +94,7 @@ void Assembler::compile()
     // cout << ",,," << machine_code_string << ",,," << endl;
     if (ks_asm(ks, assembly_code, 0, &encode, &size, &stat_count) != KS_ERR_OK)
     {
+        asmErr = true;
         printf("ERROR: ks_asm() failed & stat_count = %lu, error = %u\n",
                stat_count, ks_errno(ks));
     }
@@ -159,4 +161,9 @@ void Assembler::store(string dst_file_name) // store machine code and size
     // header << "const char *X86_CODE32 = "
     //        << "\"" << machine_code_stream.str() << "\""
     //        << ";";
+}
+
+bool Assembler::getErr()
+{
+    return asmErr;
 }
