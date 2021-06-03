@@ -22,6 +22,10 @@ CPU::CPU(/* args */)
     bp.push_back(r_bp);
     si.push_back(r_si);
     di.push_back(r_di);
+    cs.push_back(r_cs);
+    ds.push_back(r_ds);
+    ss.push_back(r_ss);
+    es.push_back(r_es);
 
     stringstream s;
     s << bitset<12>(r_flags) << endl;
@@ -46,6 +50,10 @@ bool CPU::open()
     bp.clear();
     si.clear();
     di.clear();
+    cs.clear();
+    ds.clear();
+    ss.clear();
+    es.clear();
 
     eax.push_back(r_eax);
     ebx.push_back(r_ebx);
@@ -58,6 +66,11 @@ bool CPU::open()
     bp.push_back(r_bp);
     si.push_back(r_si);
     di.push_back(r_di);
+
+    cs.push_back(r_cs);
+    ds.push_back(r_ds);
+    ss.push_back(r_ss);
+    es.push_back(r_es);
 
     stringstream s;
     s << bitset<12>(r_flags);
@@ -184,6 +197,11 @@ void CPU::rx_regs()
     uc_reg_read(uc, UC_X86_REG_BP, &r_bp);
     uc_reg_read(uc, UC_X86_REG_SI, &r_si);
     uc_reg_read(uc, UC_X86_REG_DI, &r_di);
+
+    uc_reg_read(uc, UC_X86_REG_CS, &r_cs);
+    uc_reg_read(uc, UC_X86_REG_DS, &r_ds);
+    uc_reg_read(uc, UC_X86_REG_SS, &r_ss);
+    uc_reg_read(uc, UC_X86_REG_ES, &r_es);
     // uc_reg_read(uc, UC_X86_REG_CS, &r_cs);
 
     cout << "Values read from register:\n";
@@ -238,6 +256,12 @@ void CPU::emulate()
     bp.push_back(r_bp);
     si.push_back(r_si);
     di.push_back(r_di);
+
+    cs.push_back(r_cs);
+    ds.push_back(r_ds);
+    ss.push_back(r_ss);
+    es.push_back(r_es);
+
     stringstream s;
     s << bitset<12>(r_flags);
     eflags.push_back(s.str());
@@ -262,8 +286,12 @@ void CPU::emulate()
 
     // Code keeps increasing? or just display vars
 
+    int dbg = 0;
     while (r_eip < ADDRESS + size)
     {
+        dbg++;
+        if(dbg > 20)
+            break;
         oldIP = r_eip;
         string x;
         // cout << "Press any key to advance ...";
@@ -286,6 +314,10 @@ void CPU::emulate()
         bp.push_back(r_bp);
         si.push_back(r_si);
         di.push_back(r_di);
+        cs.push_back(r_cs);
+        ds.push_back(r_ds);
+        ss.push_back(r_ss);
+        es.push_back(r_es);
         s << bitset<12>(r_flags);
         eflags.push_back(s.str());
         s.str("");
@@ -333,10 +365,14 @@ void CPU::reset_regs()
     r_eip = 0;
     r_al = 0;
     r_flags = 0;
-    r_sp = 0;
+    r_sp = 0xFFFE;
     r_bp = 0;
     r_si = 0;
     r_di = 0;
+    r_cs = 0x100;
+    r_ds = 0x100;
+    r_ss = 0x100;
+    r_es = 0x100;
 }
 
 vector<int> CPU::get_eax()
@@ -388,6 +424,24 @@ vector<int> CPU::get_di()
 {
     return di;
 }
+vector<int> CPU::get_cs()
+{
+    return cs;
+}
+vector<int> CPU::get_ds()
+{
+    return ds;
+}
+vector<int> CPU::get_ss()
+{
+    return ss;
+}
+vector<int> CPU::get_es()
+{
+    return es;
+}
+
+
 
 int CPU::get_instructionsCnt()
 {

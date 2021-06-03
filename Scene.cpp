@@ -122,22 +122,37 @@ void Scene::loadRes(SDL_Renderer *Renderer)
   regs[16].setX(regs[1].getX() + 200);
   regs[16].setY(regs[1].getY());
   regs[16].setColor(0, 0, 0);
-  regs[16].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+  regs[16].setButton("BP: ", "IBM_PS.ttf", 20, Renderer);
 
   regs[17].setX(regs[2].getX() + 200);
   regs[17].setY(regs[2].getY());
   regs[17].setColor(0, 0, 0);
-  regs[17].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+  regs[17].setButton("SI: ", "IBM_PS.ttf", 20, Renderer);
 
   regs[18].setX(regs[3].getX() + 200);
   regs[18].setY(regs[3].getY());
   regs[18].setColor(0, 0, 0);
-  regs[18].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+  regs[18].setButton("DI: ", "IBM_PS.ttf", 20, Renderer);
 
-  regs[19].setX(regs[4].getX() + 200);
-  regs[19].setY(regs[4].getY());
+  regs[19].setX(regs[15].getX() + 200);
+  regs[19].setY(regs[15].getY());
   regs[19].setColor(0, 0, 0);
-  regs[19].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+  regs[19].setButton("CS: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[20].setX(regs[16].getX() + 200);
+  regs[20].setY(regs[16].getY());
+  regs[20].setColor(0, 0, 0);
+  regs[20].setButton("DS: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[21].setX(regs[17].getX() + 200);
+  regs[21].setY(regs[17].getY());
+  regs[21].setColor(0, 0, 0);
+  regs[21].setButton("SS: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[22].setX(regs[18].getX() + 200);
+  regs[22].setY(regs[18].getY());
+  regs[22].setColor(0, 0, 0);
+  regs[22].setButton("ES: ", "IBM_PS.ttf", 20, Renderer);
 }
 
 void Scene::Init(SDL_Renderer *Renderer)
@@ -396,6 +411,11 @@ void Scene::render(SDL_Renderer *Renderer)
   stringstream siStream;
   stringstream diStream;
 
+  stringstream csStream;
+  stringstream dsStream;
+  stringstream ssStream;
+  stringstream esStream;
+
   if (decimalFormat)
   {
     axStream.str("");
@@ -428,6 +448,17 @@ void Scene::render(SDL_Renderer *Renderer)
     diStream.str("");
     diStream << cpu.get_di().at(stepIndex);
 
+    csStream.str("");
+    csStream << cpu.get_cs().at(stepIndex);
+    
+    dsStream.str("");
+    dsStream << cpu.get_ds().at(stepIndex);
+
+    ssStream.str("");
+    ssStream << cpu.get_ss().at(stepIndex);
+
+    esStream.str("");
+    esStream << cpu.get_es().at(stepIndex);
     // cout << "decimal";
   }
   else // hex
@@ -461,6 +492,18 @@ void Scene::render(SDL_Renderer *Renderer)
 
     diStream.str("");
     diStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_di().at(stepIndex);
+
+    csStream.str("");
+    csStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_cs().at(stepIndex);
+
+    dsStream.str("");
+    dsStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_ds().at(stepIndex);
+
+    ssStream.str("");
+    ssStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_ss().at(stepIndex);
+
+    esStream.str("");
+    esStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_es().at(stepIndex);
 
     // cout << "hex";
   }
@@ -523,6 +566,21 @@ void Scene::render(SDL_Renderer *Renderer)
 
   regs[18].setButton("DI: " + diStream.str(), "IBM_PS.ttf", 35, Renderer);
   regs[18].display(regs[18].getX(), regs[18].getY(), 150, 50, Renderer, "blended");
+
+  // segment regs
+
+  regs[19].setButton("CS: " + csStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[19].display(regs[19].getX(), regs[19].getY(), 150, 50, Renderer, "blended");
+
+  regs[20].setButton("DS: " + dsStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[20].display(regs[20].getX(), regs[20].getY(), 150, 50, Renderer, "blended");
+
+  regs[21].setButton("SS: " + ssStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[21].display(regs[21].getX(), regs[21].getY(), 150, 50, Renderer, "blended");
+
+  regs[22].setButton("ES: " + esStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[22].display(regs[22].getX(), regs[22].getY(), 150, 50, Renderer, "blended");
+
   // step index
   msg[6].setButton("Step index: " + to_string(stepIndex), "IBM_PS.ttf", 25, Renderer, "blended");
   msg[6].display(322, 410, 150, 30, Renderer, "blended");

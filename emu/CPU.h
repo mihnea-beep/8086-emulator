@@ -18,12 +18,12 @@ private:
     // registers
     int r_ebx = 0; // BX
     int r_ecx = 0; // CX
-    int r_edx = 0; // DX 
+    int r_edx = 0; // DX
     int r_eax = 0; // AX
     int r_eip = 0;
     int r_flags = 0;
     int r_al = 0;
-    
+
     // pointer registers
     int r_sp = 0;
     int r_bp = 0;
@@ -31,6 +31,13 @@ private:
     // index registers
     int r_si = 0;
     int r_di = 0;
+
+    // segment regs
+
+    int r_cs = 0;
+    int r_ds = 0;
+    int r_ss = 0;
+    int r_es = 0;
 
     vector<string> eflags;
 
@@ -48,10 +55,11 @@ private:
     vector<int> si;
     vector<int> di;
 
+    vector<int> cs;
+    vector<int> ds;
+    vector<int> ss;
+    vector<int> es;
 
-
-
-    
 public:
     CPU();
     bool open();
@@ -67,7 +75,6 @@ public:
     // added later TODO: (fix)
     void reset_regs();
 
-
     vector<int> get_eax();
     vector<int> get_ebx();
     vector<int> get_ecx();
@@ -81,6 +88,10 @@ public:
     vector<int> get_si();
     vector<int> get_di();
 
+    vector<int> get_cs();
+    vector<int> get_ds();
+    vector<int> get_ss();
+    vector<int> get_es();
 
     vector<string> get_eflags();
 
