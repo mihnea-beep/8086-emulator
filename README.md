@@ -13,15 +13,16 @@ Minimalistic Intel 8086 (16-bit microprocessor) emulator
     - Flags register (EFLAGS): CF, PF, AF, ZF, SF, TF, IF, DF, OF
 - Step by step instructions execution (Next/Previous)
 - Format switching (hexadecimal/decimal)
+- Assembling error notification
 
 ---
 ## Installation
 
 The 8086-emulator requires the following:
 
-- [**Unicorn**](https://www.unicorn-engine.org/) - powerful CPU emulator.
-- [**Keystone**](https://www.keystone-engine.org/) - a lightweight multi-platform, multi-architecture assembler framework. 
-- [**SDL**](https://www.libsdl.org/) - cross-platform development library.
+- [**Unicorn**](https://www.unicorn-engine.org/) - powerful CPU emulator; (follow the instructions on their docs/github page)
+- [**Keystone**](https://www.keystone-engine.org/) - lightweight multi-platform, multi-architecture assembler framework; (follow the instructions on their docs/github page)
+- [**SDL**](https://www.libsdl.org/) - cross-platform development library (apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev);
 
 Compile the project with the following script: 
 - **./run.sh** 

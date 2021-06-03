@@ -196,7 +196,15 @@ void Scene::checkInput()
       {
         // TODO: functionality
         system("echo \"Assembling ... \"");
-        system("cd unicorn \n ./run_assembler.sh");
+        assembler.open();
+        assembler.load("emu_data/asm_code.asm"); // "asm_code.asm" - default input file
+        assembler.store("emu_data/machine_code.txt");
+        assembler.close();
+
+        if (assembler.getErr())
+          SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assembly error", "Assembly error\nCheck your code!", NULL);
+
+        // system("cd unicorn \n ./run_assembler.sh");
         assemblePressed = false;
         //setRunning(false);
         // system("./run.sh \n ^C");
@@ -250,6 +258,17 @@ void Scene::checkInput()
         decimalFormat = !decimalFormat;
         formatPressed = false;
       }
+      if (runPressed)
+      {
+        cout << "Run ... " << endl;
+        launchProgram();
+        runPressed = false;
+      }
+      if (finishPressed)
+      {
+        stepIndex = cpu.get_instructionsCnt() - 1;
+        finishPressed = false;
+      }
     }
   }
 }
@@ -271,12 +290,25 @@ void Scene::launchCPU()
   // cpu.close();
 }
 
-void Scene::startCPU()
+void Scene::launchProgram()
 {
-
   assembler.open();
   assembler.load("emu_data/asm_code.asm"); // "asm_code.asm" - default input file
   assembler.store("emu_data/machine_code.txt");
+
+  assembler.close();
+  if (assembler.getErr())
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assembly error", "Assembly error\nCheck your code!", NULL);
+  else
+    startCPU();
+}
+
+void Scene::startCPU()
+{
+
+  // assembler.open();
+  // assembler.load("emu_data/asm_code.asm"); // "asm_code.asm" - default input file
+  // assembler.store("emu_data/machine_code.txt");
 
   cpu.set_data();
   cpu.open();
@@ -287,12 +319,12 @@ void Scene::startCPU()
   cpu.rx_regs();
 
   cpu.emulate();
-  assembler.close();
+  // assembler.close();
 
   cpu.close();
 
-  if (assembler.getErr())
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assembly error", "Assembly error\nCheck your code!", NULL);
+  // if (assembler.getErr())
+  //   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assembly error", "Assembly error\nCheck your code!", NULL);
 }
 
 void Scene::editFile()
@@ -314,6 +346,8 @@ void Scene::update()
   msg[5].setColor(0, 0, 0);
   msg[6].setColor(0, 0, 0);
   msg[7].setColor(0, 0, 0);
+  msg[8].setColor(0, 0, 0);
+  msg[9].setColor(0, 0, 0);
 
   assemblePressed = false;
   exitPressed = false;
@@ -322,6 +356,8 @@ void Scene::update()
   stepPressed = false;
   prevPressed = false;
   formatPressed = false;
+  runPressed = false;
+  finishPressed = false;
 
   if ((mx >= msg[0].getX()) && (mx <= (msg[0].getX() + msg[0].getW())))
     if ((my >= msg[0].getY()) && (my <= (msg[0].getY() + msg[0].getH())))
@@ -369,6 +405,20 @@ void Scene::update()
       msg[7].setColor(255, 0, 0);
       formatPressed = true;
     }
+
+  if ((mx >= msg[8].getX()) && (mx <= (msg[8].getX() + msg[8].getW())))
+    if ((my >= msg[8].getY()) && (my <= (msg[8].getY() + msg[8].getH())))
+    {
+      msg[8].setColor(255, 0, 0);
+      runPressed = true;
+    }
+
+  if ((mx >= msg[9].getX()) && (mx <= (msg[9].getX() + msg[9].getW())))
+    if ((my >= msg[9].getY()) && (my <= (msg[9].getY() + msg[9].getH())))
+    {
+      msg[9].setColor(255, 0, 0);
+      finishPressed = true;
+    }
   // CPU
 }
 
@@ -381,13 +431,19 @@ void Scene::render(SDL_Renderer *Renderer)
   msg[0].display(150, 50, 150, 50, Renderer, "blended");
 
   msg[1].setButton("  Exit  ", "IBM_PS.ttf", 35, Renderer, "blended");
-  msg[1].display(180, 290, 150, 50, Renderer, "blended");
+  msg[1].display(180, 450, 150, 50, Renderer, "blended");
 
   msg[2].setButton("  Edit  ", "IBM_PS.ttf", 35, Renderer, "blended");
   msg[2].display(180, 130, 150, 50, Renderer, "blended");
 
   msg[3].setButton("  Execute  ", "IBM_PS.ttf", 35, Renderer, "blended");
   msg[3].display(152, 210, 150, 50, Renderer, "blended");
+
+  msg[8].setButton("  Run  ", "IBM_PS.ttf", 35, Renderer, "blended");
+  msg[8].display(180, 290, 150, 50, Renderer, "blended");
+
+  msg[9].setButton("  Finish  ", "IBM_PS.ttf", 35, Renderer, "blended");
+  msg[9].display(180, 370, 150, 50, Renderer, "blended");
 
   // step button
 
@@ -450,7 +506,7 @@ void Scene::render(SDL_Renderer *Renderer)
 
     csStream.str("");
     csStream << cpu.get_cs().at(stepIndex);
-    
+
     dsStream.str("");
     dsStream << cpu.get_ds().at(stepIndex);
 
@@ -589,6 +645,14 @@ void Scene::render(SDL_Renderer *Renderer)
 
   msg[7].setButton("Format", "IBM_PS.ttf", 25, Renderer, "blended");
   msg[7].display(322, 480, 150, 30, Renderer, "blended");
+
+  // run & finish
+
+  msg[8].setButton("  Run  ", "IBM_PS.ttf", 35, Renderer, "blended");
+  msg[8].display(180, 290, 150, 50, Renderer, "blended");
+
+  msg[9].setButton("  Finish  ", "IBM_PS.ttf", 35, Renderer, "blended");
+  msg[9].display(180, 370, 150, 50, Renderer, "blended");
 
   SDL_RenderPresent(Renderer);
 }

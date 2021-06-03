@@ -23,6 +23,8 @@ class Scene
   bool prevPressed = false; 
   bool formatPressed = false;
   bool decimalFormat = false;
+  bool runPressed = false;
+  bool finishPressed = false;
   Assembler assembler;
   CPU cpu;
   int i = 0;
@@ -50,6 +52,7 @@ public:
   static void launchCPU();
 
   virtual void startCPU();
+  virtual void launchProgram();
 
   virtual ~Scene();
 };
