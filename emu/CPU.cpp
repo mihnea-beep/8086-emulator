@@ -207,12 +207,13 @@ void CPU::emulate()
 
     // Code keeps increasing? or just display vars
 
-    while (r_eip != ADDRESS + size)
+
+    while (r_eip < ADDRESS + size)
     {
         oldIP = r_eip;
         string x;
-        cout << "Press any key to advance ...";
-        cin >> x;
+        // cout << "Press any key to advance ...";
+        // cin >> x;
         cout << " ----- " << endl;
         err = uc_emu_start(uc, ADDRESS + (r_eip - ADDRESS), ADDRESS + size, 0, 1);
         // err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 1);
@@ -224,8 +225,12 @@ void CPU::emulate()
         ecx.push_back(r_ecx);
         edx.push_back(r_edx);
         instructionsCnt++;
+        // if(instructionsCnt >= 20)
+        //     break;
 
     }
+
+    cout << "final addr: " << ADDRESS + size;
 }
 
 void CPU::close()
