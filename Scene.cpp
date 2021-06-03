@@ -63,6 +63,11 @@ void Scene::loadRes(SDL_Renderer *Renderer)
   regs[4].setY(250);
   regs[4].setColor(0, 0, 0);
   regs[4].setButton("IP: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[5].setX(500);
+  regs[5].setY(650);
+  regs[5].setColor(0, 0, 0);
+  regs[5].setButton("EFLAGS: ", "IBM_PS.ttf", 20, Renderer);
 }
 
 void Scene::Init(SDL_Renderer *Renderer)
@@ -201,7 +206,7 @@ void Scene::startCPU()
 
   cpu.close();
 
-  if(assembler.getErr())
+  if (assembler.getErr())
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assembly error", "Assembly error\nCheck your code!", NULL);
 }
 
@@ -314,6 +319,7 @@ void Scene::render(SDL_Renderer *Renderer)
   stringstream cxStream;
   stringstream dxStream;
   stringstream ipStream;
+  stringstream efStream;
 
 
   if (decimalFormat)
@@ -332,6 +338,9 @@ void Scene::render(SDL_Renderer *Renderer)
 
     ipStream.str("");
     ipStream << cpu.get_eip().at(stepIndex);
+
+    efStream.str("");
+    efStream << cpu.get_eflags().at(stepIndex);
 
     cout << "decimal";
   }
@@ -352,6 +361,9 @@ void Scene::render(SDL_Renderer *Renderer)
     ipStream.str("");
     ipStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_eip().at(stepIndex);
 
+    efStream.str("");
+    efStream << "0x" << setfill('0') << setw(4) << right << std::hex << stoi(cpu.get_eflags().at(stepIndex));
+
     cout << "hex";
   }
 
@@ -371,6 +383,9 @@ void Scene::render(SDL_Renderer *Renderer)
 
   regs[4].setButton("IP: " + ipStream.str(), "IBM_PS.ttf", 35, Renderer);
   regs[4].display(regs[4].getX(), regs[4].getY(), 150, 50, Renderer, "blended");
+
+  regs[5].setButton("EFLAGS: " + efStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[5].display(regs[5].getX(), regs[5].getY(), 150, 50, Renderer, "blended");
 
   // step index
   msg[6].setButton("Step index: " + to_string(stepIndex), "IBM_PS.ttf", 25, Renderer, "blended");

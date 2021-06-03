@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <sstream>
 #include <unicorn/unicorn.h>
 #include <vector>
 using namespace std;
@@ -20,6 +21,9 @@ private:
     int r_edx = 1; // EDX 
     int r_eax = 0; // EAX
     int r_eip = 0;
+    int r_flags = 0;
+
+    vector<string> eflags;
 
     vector<vector<int>> regHistory; // a, b, c, d
     vector<int> eax;
@@ -50,6 +54,8 @@ public:
     vector<int> get_ecx();
     vector<int> get_edx();
     vector<int> get_eip();
+    vector<string> get_eflags();
+
     int get_instructionsCnt();
     ~CPU();
 };

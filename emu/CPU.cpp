@@ -17,6 +17,9 @@ CPU::CPU(/* args */)
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
     eip.push_back(r_eip);
+    stringstream s;
+    s << bitset<11>(r_flags) << endl;
+    eflags.push_back(s.str());
 }
 
 CPU::~CPU()
@@ -31,11 +34,16 @@ bool CPU::open()
     ebx.clear();
     ecx.clear();
     edx.clear();
+    eflags.clear();
     eax.push_back(r_eax);
     ebx.push_back(r_ebx);
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
     eip.push_back(r_eip);
+
+    stringstream s;
+    s << bitset<11>(r_flags);
+    eflags.push_back(s.str());
     // update regHist
 
     err = uc_open(UC_ARCH_X86, UC_MODE_16, &uc);
@@ -131,7 +139,6 @@ void CPU::wx_regs()
     uc_reg_write(uc, UC_X86_REG_DX, &r_edx);
     uc_reg_write(uc, UC_X86_REG_BX, &r_ebx);
     uc_reg_write(uc, UC_X86_REG_AX, &r_eax);
-
     cout << "Registers initialized.\n";
 }
 
@@ -188,11 +195,17 @@ void CPU::emulate()
 
     rx_EIP();
     rx_regs();
+    uc_reg_read(uc, UC_X86_REG_EFLAGS, &r_flags);
+
     eax.push_back(r_eax);
     ebx.push_back(r_ebx);
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
     eip.push_back(r_eip);
+    stringstream s;
+    s << bitset<11>(r_flags);
+    eflags.push_back(s.str());
+    s.str("");
     int oldIP = 0;
     instructionsCnt++;
 
@@ -224,12 +237,16 @@ void CPU::emulate()
         // err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 1);
         rx_EIP();
         rx_regs();
+        uc_reg_read(uc, UC_X86_REG_EFLAGS, &r_flags);
 
         eax.push_back(r_eax);
         ebx.push_back(r_ebx);
         ecx.push_back(r_ecx);
         edx.push_back(r_edx);
         eip.push_back(r_eip);
+        s << bitset<11>(r_flags);
+        eflags.push_back(s.str());
+        s.str("");
         instructionsCnt++;
         // if(instructionsCnt >= 20)
         //     break;
@@ -272,11 +289,17 @@ void CPU::reset_regs()
     r_edx = 1;
     r_eax = 0;
     r_eip = 0;
+    r_flags = 0;
 }
 
 vector<int> CPU::get_eax()
 {
     return eax;
+}
+
+vector<string> CPU::get_eflags()
+{
+    return eflags;
 }
 
 vector<int> CPU::get_eip()
