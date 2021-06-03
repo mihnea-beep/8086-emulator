@@ -369,10 +369,10 @@ void CPU::reset_regs()
     r_bp = 0;
     r_si = 0;
     r_di = 0;
-    r_cs = 0x100;
-    r_ds = 0x100;
-    r_ss = 0x100;
-    r_es = 0x100;
+    r_cs = 0;//0x100;
+    r_ds = 0;//0x100;
+    r_ss = 0;//0x100;
+    r_es = 0;//0x100;
 }
 
 vector<int> CPU::get_eax()

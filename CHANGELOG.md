@@ -38,3 +38,22 @@
     - Execute (separate thread)
     - Exit
 ---
+### 0.1.5
+- GUI and CPU + Assembler logic merged into a single program
+- Data (*binary*) is loaded from "junk.dat"
+- Updated paths
+- Register history
+---
+### 0.1.6
+- Clear stringstreams after usage
+- Machine code data is read all at once
+- Step/Back buttons
+- Data registers visualization
+---
+### 0.1.7
+- Data formatting options (hex, decimal)
+- IP reg
+- Assembling error message box when assembling fails
+- Pointer, index regs
+- Segment regs
+---
