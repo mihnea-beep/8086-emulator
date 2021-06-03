@@ -28,7 +28,7 @@ class Scene
   int i = 0;
 
   int stepIndex = 0;
-  Button regs[16];
+  Button regs[30];
 
 
 public:

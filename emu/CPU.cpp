@@ -17,6 +17,12 @@ CPU::CPU(/* args */)
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
     eip.push_back(r_eip);
+    al.push_back(r_al);
+    sp.push_back(r_sp);
+    bp.push_back(r_bp);
+    si.push_back(r_si);
+    di.push_back(r_di);
+
     stringstream s;
     s << bitset<12>(r_flags) << endl;
     eflags.push_back(s.str());
@@ -35,11 +41,23 @@ bool CPU::open()
     ecx.clear();
     edx.clear();
     eflags.clear();
+    al.clear();
+    sp.clear();
+    bp.clear();
+    si.clear();
+    di.clear();
+
     eax.push_back(r_eax);
     ebx.push_back(r_ebx);
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
     eip.push_back(r_eip);
+    al.push_back(r_al);
+
+    sp.push_back(r_sp);
+    bp.push_back(r_bp);
+    si.push_back(r_si);
+    di.push_back(r_di);
 
     stringstream s;
     s << bitset<12>(r_flags);
@@ -139,6 +157,12 @@ void CPU::wx_regs()
     uc_reg_write(uc, UC_X86_REG_DX, &r_edx);
     uc_reg_write(uc, UC_X86_REG_BX, &r_ebx);
     uc_reg_write(uc, UC_X86_REG_AX, &r_eax);
+
+    // uc_reg_write(uc, UC_X86_REG_SP, &r_sp);
+    // uc_reg_write(uc, UC_X86_REG_BP, &r_bp);
+    // uc_reg_write(uc, UC_X86_REG_SI, &r_si);
+    // uc_reg_write(uc, UC_X86_REG_DI, &r_di);
+
     cout << "Registers initialized.\n";
 }
 
@@ -155,10 +179,15 @@ void CPU::rx_regs()
     uc_reg_read(uc, UC_X86_REG_DX, &r_edx);
     uc_reg_read(uc, UC_X86_REG_BX, &r_ebx);
     uc_reg_read(uc, UC_X86_REG_AX, &r_eax);
+
+    uc_reg_read(uc, UC_X86_REG_SP, &r_sp);
+    uc_reg_read(uc, UC_X86_REG_BP, &r_bp);
+    uc_reg_read(uc, UC_X86_REG_SI, &r_si);
+    uc_reg_read(uc, UC_X86_REG_DI, &r_di);
     // uc_reg_read(uc, UC_X86_REG_CS, &r_cs);
 
     cout << "Values read from register:\n";
-
+    // TODO: write to file
     ofstream historyFile("emu_data/hist.txt");
     historyFile.close();
 
@@ -196,12 +225,19 @@ void CPU::emulate()
     rx_EIP();
     rx_regs();
     uc_reg_read(uc, UC_X86_REG_EFLAGS, &r_flags);
+    uc_reg_read(uc, UC_X86_REG_AL, &r_al);
 
     eax.push_back(r_eax);
     ebx.push_back(r_ebx);
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
     eip.push_back(r_eip);
+    al.push_back(r_al);
+
+    sp.push_back(r_sp);
+    bp.push_back(r_bp);
+    si.push_back(r_si);
+    di.push_back(r_di);
     stringstream s;
     s << bitset<12>(r_flags);
     eflags.push_back(s.str());
@@ -238,12 +274,18 @@ void CPU::emulate()
         rx_EIP();
         rx_regs();
         uc_reg_read(uc, UC_X86_REG_EFLAGS, &r_flags);
+        uc_reg_read(uc, UC_X86_REG_AL, &r_al);
 
         eax.push_back(r_eax);
         ebx.push_back(r_ebx);
         ecx.push_back(r_ecx);
         edx.push_back(r_edx);
         eip.push_back(r_eip);
+        al.push_back(r_al);
+        sp.push_back(r_sp);
+        bp.push_back(r_bp);
+        si.push_back(r_si);
+        di.push_back(r_di);
         s << bitset<12>(r_flags);
         eflags.push_back(s.str());
         s.str("");
@@ -284,17 +326,27 @@ void CPU::close()
 void CPU::reset_regs()
 {
     printf("Resetting registers\n");
-    r_ebx = 1;
-    r_ecx = 1;
-    r_edx = 1;
+    r_ebx = 0;
+    r_ecx = 0;
+    r_edx = 0;
     r_eax = 0;
     r_eip = 0;
+    r_al = 0;
     r_flags = 0;
+    r_sp = 0;
+    r_bp = 0;
+    r_si = 0;
+    r_di = 0;
 }
 
 vector<int> CPU::get_eax()
 {
     return eax;
+}
+
+vector<int> CPU::get_al()
+{
+    return al;
 }
 
 vector<string> CPU::get_eflags()
@@ -318,6 +370,23 @@ vector<int> CPU::get_ecx()
 vector<int> CPU::get_edx()
 {
     return edx;
+}
+
+vector<int> CPU::get_sp()
+{
+    return sp;
+}
+vector<int> CPU::get_bp()
+{
+    return bp;
+}
+vector<int> CPU::get_si()
+{
+    return si;
+}
+vector<int> CPU::get_di()
+{
+    return di;
 }
 
 int CPU::get_instructionsCnt()

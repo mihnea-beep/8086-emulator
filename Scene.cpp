@@ -113,6 +113,31 @@ void Scene::loadRes(SDL_Renderer *Renderer)
   regs[14].setY(550);
   regs[14].setColor(0, 0, 0);
   regs[14].setButton("ZF: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[15].setX(regs[0].getX() + 200);
+  regs[15].setY(regs[0].getY());
+  regs[15].setColor(0, 0, 0);
+  regs[15].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[16].setX(regs[1].getX() + 200);
+  regs[16].setY(regs[1].getY());
+  regs[16].setColor(0, 0, 0);
+  regs[16].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[17].setX(regs[2].getX() + 200);
+  regs[17].setY(regs[2].getY());
+  regs[17].setColor(0, 0, 0);
+  regs[17].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[18].setX(regs[3].getX() + 200);
+  regs[18].setY(regs[3].getY());
+  regs[18].setColor(0, 0, 0);
+  regs[18].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
+
+  regs[19].setX(regs[4].getX() + 200);
+  regs[19].setY(regs[4].getY());
+  regs[19].setColor(0, 0, 0);
+  regs[19].setButton("SP: ", "IBM_PS.ttf", 20, Renderer);
 }
 
 void Scene::Init(SDL_Renderer *Renderer)
@@ -366,6 +391,11 @@ void Scene::render(SDL_Renderer *Renderer)
   stringstream ipStream;
   stringstream efStream;
 
+  stringstream spStream;
+  stringstream bpStream;
+  stringstream siStream;
+  stringstream diStream;
+
   if (decimalFormat)
   {
     axStream.str("");
@@ -385,6 +415,18 @@ void Scene::render(SDL_Renderer *Renderer)
 
     efStream.str("");
     efStream << cpu.get_eflags().at(stepIndex);
+
+    spStream.str("");
+    spStream << cpu.get_sp().at(stepIndex);
+
+    bpStream.str("");
+    bpStream << cpu.get_bp().at(stepIndex);
+
+    siStream.str("");
+    siStream << cpu.get_si().at(stepIndex);
+
+    diStream.str("");
+    diStream << cpu.get_di().at(stepIndex);
 
     // cout << "decimal";
   }
@@ -407,6 +449,18 @@ void Scene::render(SDL_Renderer *Renderer)
 
     efStream.str("");
     efStream << "0x" << setfill('0') << setw(4) << right << std::hex << stoi(cpu.get_eflags().at(stepIndex));
+
+    spStream.str("");
+    spStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_sp().at(stepIndex);
+
+    bpStream.str("");
+    bpStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_bp().at(stepIndex);
+
+    siStream.str("");
+    siStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_si().at(stepIndex);
+
+    diStream.str("");
+    diStream << "0x" << setfill('0') << setw(4) << right << std::hex << cpu.get_di().at(stepIndex);
 
     // cout << "hex";
   }
@@ -457,6 +511,18 @@ void Scene::render(SDL_Renderer *Renderer)
 
   regs[14].setButton("OF: " + cpu.get_eflags().at(stepIndex).substr(0, 1), "IBM_PS.ttf", 35, Renderer);
   regs[14].display(regs[14].getX(), regs[14].getY(), 150, 50, Renderer, "blended");
+
+  regs[15].setButton("SP: " + spStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[15].display(regs[15].getX(), regs[15].getY(), 150, 50, Renderer, "blended");
+
+  regs[16].setButton("BP: " + bpStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[16].display(regs[16].getX(), regs[16].getY(), 150, 50, Renderer, "blended");
+
+  regs[17].setButton("SI: " + siStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[17].display(regs[17].getX(), regs[17].getY(), 150, 50, Renderer, "blended");
+
+  regs[18].setButton("DI: " + diStream.str(), "IBM_PS.ttf", 35, Renderer);
+  regs[18].display(regs[18].getX(), regs[18].getY(), 150, 50, Renderer, "blended");
   // step index
   msg[6].setButton("Step index: " + to_string(stepIndex), "IBM_PS.ttf", 25, Renderer, "blended");
   msg[6].display(322, 410, 150, 30, Renderer, "blended");
