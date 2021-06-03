@@ -4,6 +4,8 @@
 #include <vector>
 #include "Assembler.h"
 #include <vector>
+#include <iomanip>
+#include <bitset>
 using namespace std;
 
 CPU::CPU(/* args */)
@@ -14,6 +16,7 @@ CPU::CPU(/* args */)
     ebx.push_back(r_ebx);
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
+    eip.push_back(r_eip);
 }
 
 CPU::~CPU()
@@ -32,6 +35,7 @@ bool CPU::open()
     ebx.push_back(r_ebx);
     ecx.push_back(r_ecx);
     edx.push_back(r_edx);
+    eip.push_back(r_eip);
     // update regHist
 
     err = uc_open(UC_ARCH_X86, UC_MODE_32, &uc);
@@ -144,6 +148,7 @@ void CPU::rx_regs()
     uc_reg_read(uc, UC_X86_REG_EDX, &r_edx);
     uc_reg_read(uc, UC_X86_REG_EBX, &r_ebx);
     uc_reg_read(uc, UC_X86_REG_EAX, &r_eax);
+    // uc_reg_read(uc, UC_X86_REG_CS, &r_cs);
 
     cout << "Values read from register:\n";
 
@@ -181,12 +186,13 @@ void CPU::emulate()
     err = uc_emu_start(uc, ADDRESS, ADDRESS + size, 0, 1);
     rx_EIP();
 
-    // rx_EIP();
-    // rx_regs();
-    // eax.push_back(r_eax);
-    // ebx.push_back(r_ebx);
-    // ecx.push_back(r_ecx);
-    // edx.push_back(r_edx);
+    rx_EIP();
+    rx_regs();
+    eax.push_back(r_eax);
+    ebx.push_back(r_ebx);
+    ecx.push_back(r_ecx);
+    edx.push_back(r_edx);
+    eip.push_back(r_eip);
     int oldIP = 0;
     instructionsCnt++;
 
@@ -207,7 +213,6 @@ void CPU::emulate()
 
     // Code keeps increasing? or just display vars
 
-
     while (r_eip < ADDRESS + size)
     {
         oldIP = r_eip;
@@ -224,17 +229,29 @@ void CPU::emulate()
         ebx.push_back(r_ebx);
         ecx.push_back(r_ecx);
         edx.push_back(r_edx);
+        eip.push_back(r_eip);
         instructionsCnt++;
         // if(instructionsCnt >= 20)
         //     break;
-
     }
+
+    // eax.push_back(r_eax);
+    // ebx.push_back(r_ebx);
+    // ecx.push_back(r_ecx);
+    // edx.push_back(r_edx);
+    instructionsCnt++;
 
     cout << "final addr: " << ADDRESS + size;
 }
 
 void CPU::close()
 {
+    int x;
+    uc_reg_read(uc, UC_X86_REG_EFLAGS, &x);
+    cout << "flags: "
+         << "0x" << setfill('0') << setw(4) << right << std::hex << x;
+    cout << "\nflags: " << bitset<8>(x) << endl;
+    cout << dec << x;
     printf("Emulation done. Below is the CPU context\n");
     rx_regs();
     uc_close(uc);
@@ -260,6 +277,24 @@ void CPU::reset_regs()
 vector<int> CPU::get_eax()
 {
     return eax;
+}
+
+vector<int> CPU::get_eip()
+{
+    return eip;
+}
+
+vector<int> CPU::get_ebx()
+{
+    return ebx;
+}
+vector<int> CPU::get_ecx()
+{
+    return ecx;
+}
+vector<int> CPU::get_edx()
+{
+    return edx;
 }
 
 int CPU::get_instructionsCnt()

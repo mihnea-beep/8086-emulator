@@ -125,6 +125,14 @@ void Scene::checkInput()
         // thread threadLaunch = thread(launchCPU);
         // threadLaunch.detach();
       }
+      if (prevPressed)
+      {
+        cout << "Prev" << endl;
+        cout << "stepIndex: " << stepIndex << endl;
+        if (stepIndex >= 1)
+          stepIndex--;
+        stepPressed = false;
+      }
     }
   }
 }
@@ -183,12 +191,17 @@ void Scene::update()
   msg[2].setColor(0, 0, 0);
   msg[3].setColor(0, 0, 0);
   msg[4].setColor(0, 0, 0);
+  msg[5].setColor(0, 0, 0);
+  msg[6].setColor(0, 0, 0);
+
+
 
   assemblePressed = false;
   exitPressed = false;
   editPressed = false;
   executePressed = false;
   stepPressed = false;
+  prevPressed = false;
 
   if ((mx >= msg[0].getX()) && (mx <= (msg[0].getX() + msg[0].getW())))
     if ((my >= msg[0].getY()) && (my <= (msg[0].getY() + msg[0].getH())))
@@ -222,6 +235,13 @@ void Scene::update()
       msg[4].setColor(255, 0, 0);
       stepPressed = true;
     }
+
+  if ((mx >= msg[5].getX()) && (mx <= (msg[5].getX() + msg[5].getW())))
+    if ((my >= msg[5].getY()) && (my <= (msg[5].getY() + msg[5].getH())))
+    {
+      msg[5].setColor(255, 0, 0);
+      prevPressed = true;
+    }
   // CPU
 
   // step by step execution
@@ -253,9 +273,17 @@ void Scene::render(SDL_Renderer *Renderer)
   msg[4].setButton("Next", "IBM_PS.ttf", 35, Renderer, "blended");
   msg[4].display(352, 210, 150, 50, Renderer, "blended");
 
+  msg[5].setButton("Prev", "IBM_PS.ttf", 35, Renderer, "blended");
+  msg[5].display(352, 310, 150, 50, Renderer, "blended");
+
   // registers values
   regs[0].setButton("AX: " + to_string(cpu.get_eax().at(stepIndex)), "IBM_PS.ttf", 35, Renderer);
   regs[0].display(regs[0].getX(), regs[0].getY(), 150, 50, Renderer, "blended");
+
+  // step index
+  msg[6].setButton("Step index: " + to_string(stepIndex), "IBM_PS.ttf", 25, Renderer, "blended");
+  msg[6].display(322, 410, 150, 30, Renderer, "blended");
+
 
   SDL_RenderPresent(Renderer);
 }

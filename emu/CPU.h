@@ -26,6 +26,7 @@ private:
     vector<int> ebx;
     vector<int> ecx;
     vector<int> edx;
+    vector<int> eip;
 
     
 public:
@@ -45,10 +46,10 @@ public:
 
 
     vector<int> get_eax();
-    int get_ebx();
-    int get_ecx();
-    int get_edx();
-    int get_eip();
+    vector<int> get_ebx();
+    vector<int> get_ecx();
+    vector<int> get_edx();
+    vector<int> get_eip();
     int get_instructionsCnt();
     ~CPU();
 };

@@ -14,12 +14,13 @@ class Scene
   bool scene_running = false;
 
   GUI element;
-  Button msg[5]; // 5 buttons
+  Button msg[7]; // 5 buttons
   bool assemblePressed = false;
   bool exitPressed = false;
   bool editPressed = false;
   bool executePressed = false;
-  bool stepPressed = false;
+  bool stepPressed = false; // next
+  bool prevPressed = false; 
   Assembler assembler;
   CPU cpu;
 
