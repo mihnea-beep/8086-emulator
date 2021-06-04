@@ -14,7 +14,11 @@ Minimalistic Intel 8086 (16-bit microprocessor) emulator
 - Step by step instructions execution (Next/Previous)
 - Format switching (hexadecimal/decimal)
 - Assembling error notification
-
+- Automatic assembling & execution (run + finish)
+- Separate assembling/execution
+<br><br>
+![menu](img/menu1.jpg)
+![menu](img/menu2.jpg)
 ---
 ## Installation
 
@@ -33,6 +37,10 @@ Compile the project with the following script:
 - Launch the emulator: ./mini_emu
 
 - Use the <u>**Edit**</u> button to write assembly code
+
+- The code can be edited in "asm_code.asm" (one instruction per line)
+    <br> eg:<br> ... <br>mov AX, 100 <br> 
+        add AX, BX <br> ...
 
 - Use the <u>**Assemble**</u> button to turn assembly code into machine code
 

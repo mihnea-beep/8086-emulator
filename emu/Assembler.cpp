@@ -29,8 +29,17 @@ void Assembler::load(string src)
     cout << "Reading assembly code from asm_code.asm ...\n";
     // string src = "asm_code.asm";
     ifstream src_file(src);
+    string spLines;
     string line;
-    getline(src_file, line);
+    string separator = " ;";
+
+    while (getline(src_file, line))
+    {
+        spLines = spLines + line + separator;
+    }
+
+    line = spLines;
+
     cout << "Code: " << line << endl;
 
     CODE = (char *)line.c_str();

@@ -260,6 +260,7 @@ void Scene::checkInput()
       }
       if (runPressed)
       {
+        stepIndex = 0;
         cout << "Run ... " << endl;
         launchProgram();
         runPressed = false;
