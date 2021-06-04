@@ -55,3 +55,9 @@ Compile the project with the following script:
 - <u>**Step index**</u> indicates the current instruction
 
 - <u>**Finish**</u> executes all the steps
+
+---
+<br>
+
+## Changelog
+- ### [See changes](CHANGELOG.md)

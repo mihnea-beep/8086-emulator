@@ -57,3 +57,8 @@
 - Pointer, index regs
 - Segment regs
 ---
+### 0.1.8
+- Input parsing fix (one instruction per line)
+- Run and Finish buttons 
+- Assemble button fix
+---
