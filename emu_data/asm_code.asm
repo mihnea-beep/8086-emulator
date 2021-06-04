@@ -1,4 +1,4 @@
-mov AX, 10000
+mov AaX, 10000
 sub AX, 10005
 mov DS, AX
 mov BX, 1455

@@ -17,8 +17,12 @@ Minimalistic Intel 8086 (16-bit microprocessor) emulator
 - Automatic assembling & execution (run + finish)
 - Separate assembling/execution
 <br><br>
+- Before:
 ![menu](img/menu1.jpg)
+- After (execution and changing the format):
 ![menu](img/menu2.jpg)
+- Assembly error:
+![error](img/error.jpg)
 ---
 ## Installation
 
