@@ -31,7 +31,7 @@ The 8086-emulator requires the following:
 Compile the project with the following script: 
 - **./run.sh** 
 ---
-## How to use
+## How to use it
 <br>
 
 - Launch the emulator: ./mini_emu
@@ -61,3 +61,15 @@ Compile the project with the following script:
 
 ## Changelog
 - ### [See changes](CHANGELOG.md)
+
+---
+
+## "Milestones"
+
+See [Changelog](CHANGELOG.md), but to sum it up:
+
+- Connecting Keystone and Unicorn
+- Merging everything into one single program (unicorn's machine code input file is meant to be stored and read as *binary* data, not string or anything else). Up until that point, the unicorn powered CPU needed its own header (generated with each execution)
+- Rendering, done from scratch (loading textures and surfaces, font blending and display logic - hover effects) as well as events handling via SDL.
+
+The code could use some refactoring (especially the main loop).
